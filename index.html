@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Misión Equilibria — Inicio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Space+Mono:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<script>try{document.documentElement.lang=localStorage.getItem('equilibria:landing:lang')==='es'?'es':'en'}catch(e){document.documentElement.lang='en'}</script>
+</head>
+<body>
+<div id="stage">
+  <canvas id="c" width="1280" height="720" aria-hidden="true"></canvas>
+  <div id="marca"><div class="k"><span class="es">ACADEMIA DE ASTRONAUTAS</span><span class="en">ASTRONAUT ACADEMY</span></div><h1><span class="es">Misión Equilibria</span><span class="en">Mission Equilibria</span></h1></div>
+  <button class="btn-idioma" id="bIdioma"><span class="es">Translate to English</span><span class="en">Ver en español</span></button>
+
+  <section class="mitad izq">
+    <div class="tarjeta">
+      <div class="lunia" aria-hidden="true"><i class="ojo a"></i><i class="ojo b"></i><i class="mej a"></i><i class="mej b"></i><i class="boca"></i></div>
+      <h2><span class="es">Saber más sobre <span class="dest">LUNIA</span></span><span class="en">Learn more about <span class="dest">LUNIA</span></span></h2>
+      <button class="btn ir" id="bIr"><span class="es">IR</span><span class="en">GO</span></button>
+    </div>
+  </section>
+
+  <section class="mitad der">
+    <div class="tarjeta">
+      <div class="icono-juego" aria-hidden="true">🚀</div>
+      <h2><span class="es">Jugar el <span class="dest">demo</span></span><span class="en">Play the <span class="dest">demo</span></span></h2>
+      <button class="btn jugar" id="bJugar"><span class="es">JUGAR</span><span class="en">PLAY</span></button>
+    </div>
+  </section>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

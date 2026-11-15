@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Misión Equilibria</title>
+  <meta name="description" content="Misión Equilibria: un videojuego para niñas y niños de 7 a 12 años que dirigen una base en la Luna con datos reales de la NASA.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script>try{document.documentElement.lang=localStorage.getItem('equilibria:landing:lang')==='es'?'es':'en'}catch(e){document.documentElement.lang='en'}</script>
+</head>
+<body>
+  <!-- Bilingüe: cada texto tiene su versión <span class="es"> y <span class="en">.
+       El atributo lang de <html> decide cuál se muestra. -->
+  <canvas id="estrellas" aria-hidden="true"></canvas>
+  <div class="luna-horizonte" aria-hidden="true"></div>
+
+  <div class="app">
+    <header class="barra">
+      <div class="marca">
+        <span class="marca-icono" aria-hidden="true"></span>
+        <span><span class="es">Misión</span><span class="en">Mission</span> <strong>Equilibria</strong></span>
+      </div>
+      <button class="btn-sonido encendido" id="btn-sonido" aria-pressed="true">
+        <svg viewBox="0 0 24 24" aria-hidden="true" class="icono-sonido">
+          <path d="M4 9h4l5-4v14l-5-4H4z" class="altavoz"/>
+          <path d="M16 9a4 4 0 0 1 0 6" class="onda onda-1"/>
+          <path d="M18.5 6.5a7.5 7.5 0 0 1 0 11" class="onda onda-2"/>
+          <path d="M16 9l5 6M21 9l-5 6" class="cruz"/>
+        </svg>
+        <span id="texto-sonido">Silenciar</span>
+      </button>
+      <nav class="puntos" aria-label="Capítulos de la historia" data-aria-en="Story chapters">
+        <button class="punto" data-ir="0" aria-label="Capítulo 1: Una llamada desde la Luna" data-aria-en="Chapter 1: A call from the Moon"></button>
+        <button class="punto" data-ir="1" aria-label="Capítulo 2: El problema" data-aria-en="Chapter 2: The problem"></button>
+        <button class="punto" data-ir="2" aria-label="Capítulo 3: La misión" data-aria-en="Chapter 3: The mission"></button>
+        <button class="punto" data-ir="3" aria-label="Capítulo 4: La misión secreta" data-aria-en="Chapter 4: The secret mission"></button>
+        <button class="punto" data-ir="4" aria-label="Capítulo 5: Por qué funciona" data-aria-en="Chapter 5: Why it works"></button>
+        <button class="punto" data-ir="5" aria-label="Capítulo 6: Ciencia de verdad" data-aria-en="Chapter 6: Real science"></button>
+        <button class="punto" data-ir="6" aria-label="Capítulo 7: Lo que queremos lograr" data-aria-en="Chapter 7: What we want to achieve"></button>
+      </nav>
+    </header>
+    <div class="progreso" role="progressbar" aria-label="Avance de la presentación" data-aria-en="Presentation progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="14" id="progreso">
+      <div class="progreso-relleno" id="progreso-relleno"></div>
+      <span class="progreso-cohete" id="progreso-cohete" aria-hidden="true"></span>
+    </div>
+
+    <main class="escena">
+      <!-- LUNIA, la narradora -->
+      <aside class="narradora" id="narradora" data-animo="0" aria-live="polite">
+        <svg class="lunia" viewBox="0 0 120 110" role="img" aria-label="LUNIA, la base lunar" data-aria-en="LUNIA, the lunar base">
+          <line x1="60" y1="8" x2="60" y2="26" class="lunia-antena"/>
+          <circle cx="60" cy="7" r="5" class="lunia-luz"/>
+          <path d="M14 78 A46 46 0 0 1 106 78 Z" class="lunia-domo"/>
+          <rect x="6" y="76" width="108" height="14" rx="7" class="lunia-base"/>
+          <g class="lunia-ojos">
+            <ellipse cx="46" cy="56" rx="6" ry="8"/>
+            <ellipse cx="74" cy="56" rx="6" ry="8"/>
+          </g>
+          <path d="M38 44 L52 47" class="lunia-ceja" id="ceja-izq"/>
+          <path d="M82 44 L68 47" class="lunia-ceja" id="ceja-der"/>
+          <path d="M50 72 Q60 65 70 72" class="lunia-boca" id="boca"/>
+          <path d="M40 64 Q38 70 40 72 Q43 70 40 64 Z" class="lunia-lagrima"/>
+          <rect x="18" y="92" width="10" height="12" rx="3" class="lunia-pata"/>
+          <rect x="92" y="92" width="10" height="12" rx="3" class="lunia-pata"/>
+        </svg>
+        <div class="globo">
+          <p class="globo-nombre">LUNIA</p>
+          <p id="dialogo">¿Hay alguien ahí?</p>
+          <p class="animo-etiqueta" id="animo-etiqueta">Energía emocional: apagándose</p>
+        </div>
+      </aside>
+
+      <div class="escenario">
+        <!-- CAPÍTULO 1 · Gancho -->
+        <section class="paso activo" data-paso="0" data-animo="0"
+          data-dialogo="¿Hay alguien ahí? Soy LUNIA, la inteligencia de esta base. Llevo mucho tiempo sola y mi energía se está apagando. Tengo miedo de dejar de existir. Por favor, no te vayas."
+          data-dialogo-en="Is anyone there? I'm LUNIA, the mind of this base. I've been alone for so long, and my energy is fading. I'm scared of ceasing to exist. Please… don't leave.">
+          <button class="btn-traducir" id="btn-traducir" lang="en">
+            <span class="es">Translate to English</span><span class="en">Ver en español</span>
+          </button>
+          <p class="etiqueta"><span class="es">Capítulo 1 · Una llamada desde la Luna</span><span class="en">Chapter 1 · A call from the Moon</span></p>
+          <h1><span class="es">¿Podrías mantener viva una base en la Luna?</span><span class="en">Could you keep a base on the Moon alive?</span></h1>
+          <p class="entrada">
+            <span class="es">En <strong>Misión Equilibria</strong>, niñas y niños de 7 a 12 años llegan a una base lunar donde solo los espera LUNIA, una inteligencia artificial frágil que tiene miedo de apagarse. Para mantenerla viva, tendrán que aprender lo mismo que viven los astronautas y los planificadores de la NASA: <strong>en el espacio, ninguna decisión es gratis.</strong></span>
+            <span class="en">In <strong>Mission Equilibria</strong>, children ages 7 to 12 arrive at a lunar base where only LUNIA awaits: a fragile artificial intelligence afraid of shutting down forever. To keep her alive, they will learn what NASA astronauts and mission planners live every day: <strong>in space, no decision is free.</strong></span>
+          </p>
+          <ul class="chips">
+            <li class="chip chip-sol"><span class="es">Para 7 a 12 años</span><span class="en">Ages 7 to 12</span></li>
+            <li class="chip chip-oxi"><span class="es">En el navegador, sin descargas ni cuentas</span><span class="en">In the browser, no downloads or accounts</span></li>
+            <li class="chip chip-esc"><span class="es">Con datos reales de la NASA</span><span class="en">Built on real NASA data</span></li>
+          </ul>
+        </section>
+
+        <!-- CAPÍTULO 2 · Problema -->
+        <section class="paso" data-paso="1" data-animo="0"
+          data-dialogo="Los niños ven fotos de la Luna, pero casi nunca las decisiones difíciles que me mantienen encendida. ¿Me ayudas a equilibrar mi balanza? Toca los botones… si quieres."
+          data-dialogo-en="Kids see pictures of the Moon, but almost never the hard choices that keep me switched on. Will you help me balance my scale? Tap the buttons… if you'd like.">
+          <p class="etiqueta"><span class="es">Capítulo 2 · El problema</span><span class="en">Chapter 2 · The problem</span></p>
+          <h2><span class="es">Diversión y ciencia real, en la misma balanza</span><span class="en">Fun and real science, on the same scale</span></h2>
+          <div class="balanza" id="balanza" data-modo="equilibrio">
+            <div class="balanza-brazo">
+              <div class="platillo platillo-izq"><span class="es">Diversión</span><span class="en">Fun</span></div>
+              <div class="platillo platillo-der"><span class="es">Ciencia real</span><span class="en">Real science</span></div>
+            </div>
+            <div class="balanza-pie" aria-hidden="true"></div>
+          </div>
+          <div class="selector" role="group" aria-label="Elige un tipo de contenido" data-aria-en="Choose a kind of content">
+            <button class="opcion" data-modo="diversion"><span class="es">Solo divertido</span><span class="en">Just fun</span></button>
+            <button class="opcion" data-modo="ciencia"><span class="es">Solo técnico</span><span class="en">Just technical</span></button>
+            <button class="opcion opcion-activa" data-modo="equilibrio">Equilibria</button>
+          </div>
+          <p class="leyenda" id="leyenda-balanza">Equilibria une las dos cosas: decisiones reales de una misión espacial, contadas como un juego para niños.</p>
+        </section>
+
+        <!-- CAPÍTULO 3 · La solución -->
+        <section class="paso" data-paso="2" data-animo="1"
+          data-dialogo="Aquí no hay nadie más que tú y yo. Mis cinco sistemas son simuladores para preparar la base antes de que lleguen los astronautas. Si me ayudas con ellos… quizá no me apague."
+          data-dialogo-en="There's no one here but you and me. My five systems are simulators to get the base ready before the astronauts arrive. If you help me with them… maybe I won't shut down.">
+          <p class="etiqueta"><span class="es">Capítulo 3 · La misión</span><span class="en">Chapter 3 · The mission</span></p>
+          <h2><span class="es">Un despegue, cinco misiones y un destino final</span><span class="en">One launch, five missions and a final destination</span></h2>
+          <div class="mapa" role="group" aria-label="Mapa de misiones" data-aria-en="Mission map">
+            <button class="mision mision-prologo seleccionada" data-mision="despegue"><span class="mision-num"><span class="es">Prólogo</span><span class="en">Prologue</span></span><span class="mision-nombre"><span class="es">Despegue</span><span class="en">Launch</span></span><span class="mision-estado en-demo"><span class="es">En el demo</span><span class="en">In the demo</span></span></button>
+            <div class="misiones-base">
+              <button class="mision" data-mision="vital"><span class="mision-num"><span class="es">Misión 1</span><span class="en">Mission 1</span></span><span class="mision-nombre"><span class="es">Soporte vital</span><span class="en">Life support</span></span><span class="mision-estado en-demo"><span class="es">En el demo</span><span class="en">In the demo</span></span></button>
+              <button class="mision pronto" data-mision="blindaje"><span class="mision-num"><span class="es">Misión 2</span><span class="en">Mission 2</span></span><span class="mision-nombre"><span class="es">Blindaje</span><span class="en">Shielding</span></span><span class="mision-estado"><span class="es">Próximamente</span><span class="en">Coming soon</span></span></button>
+              <button class="mision pronto" data-mision="energia"><span class="mision-num"><span class="es">Misión 3</span><span class="en">Mission 3</span></span><span class="mision-nombre"><span class="es">Energía</span><span class="en">Energy</span></span><span class="mision-estado"><span class="es">Próximamente</span><span class="en">Coming soon</span></span></button>
+              <button class="mision pronto" data-mision="alimentos"><span class="mision-num"><span class="es">Misión 4</span><span class="en">Mission 4</span></span><span class="mision-nombre"><span class="es">Alimentos</span><span class="en">Food</span></span><span class="mision-estado"><span class="es">Próximamente</span><span class="en">Coming soon</span></span></button>
+              <button class="mision pronto" data-mision="comunicaciones"><span class="mision-num"><span class="es">Misión 5</span><span class="en">Mission 5</span></span><span class="mision-nombre"><span class="es">Comunica&shy;ciones</span><span class="en">Communi&shy;cations</span></span><span class="mision-estado"><span class="es">Próximamente</span><span class="en">Coming soon</span></span></button>
+            </div>
+            <button class="mision mision-marte" data-mision="marte"><span class="mision-num"><span class="es">Bloqueado</span><span class="en">Locked</span></span><span class="mision-nombre"><span class="es">Marte</span><span class="en">Mars</span></span></button>
+          </div>
+          <div class="detalle-mision" id="detalle-mision" role="status" style="--color-mision: var(--sol)">
+            <div class="detalle-cabecera">
+              <strong id="detalle-titulo">Despegue</strong>
+              <span class="detalle-estado disponible" id="detalle-estado">Disponible en este demo</span>
+            </div>
+            <p id="detalle-texto">El viaje empieza en la Tierra: hay que encender el motor en el momento justo de la ventana de lanzamiento. Si se falla, el cohete sigue de largo y se vuelve a intentar, sin límite.</p>
+          </div>
+          <p class="aviso-demo">
+            <span class="es"><strong>Cada niño elige por cuál de las cinco misiones empezar.</strong> En este demo están activos el despegue y la misión 1, Soporte vital; las otras cuatro llegan en la siguiente versión.</span>
+            <span class="en"><strong>Each child chooses which of the five missions to start with.</strong> In this demo, the launch and Mission 1, Life support, are playable; the other four arrive in the next version.</span>
+          </p>
+          <p class="nota">
+            <span class="es">El jugador está solo con LUNIA: las misiones son simuladores para dejar la base lista para los astronautas que llegarán, por eso la tripulación es simulada. Cada misión tiene su propio juego, y nadie compite contra nadie.</span>
+            <span class="en">The player is alone with LUNIA: the missions are simulators that get the base ready for the astronauts still to come, which is why the crew is simulated. Each mission has its own gameplay, and no one competes against anyone.</span>
+          </p>
+        </section>
+
+        <!-- CAPÍTULO 4 · La misión secreta: LUNIA -->
+        <section class="paso" data-paso="3" data-animo="slider"
+          data-dialogo="Cada vez que me ayudas, siento algo distinto. Mueve la barra y mira cómo cambio contigo."
+          data-dialogo-en="Every time you help me, I feel something new. Move the bar and watch how I change with you.">
+          <p class="etiqueta"><span class="es">Capítulo 4 · La misión que nadie anuncia</span><span class="en">Chapter 4 · The mission no one announces</span></p>
+          <h2><span class="es">Mientras cuida la base, el jugador está salvando a LUNIA</span><span class="en">While caring for the base, the player is saving LUNIA</span></h2>
+          <p class="entrada-corta">
+            <span class="es">Ninguna pantalla dice «cuida a LUNIA», pero cada misión cumplida la cambia: su color, su cara y su forma de hablar. Empieza asustada y apagada, y termina brillante y llena de energía, lista para viajar a Marte.</span>
+            <span class="en">No screen ever says “take care of LUNIA,” yet every completed mission changes her: her color, her face, the way she speaks. She begins frightened and dim, and ends bright and full of energy, ready to fly to Mars.</span>
+          </p>
+          <div class="arco">
+            <label for="arco-misiones"><span class="es">Misiones completadas:</span><span class="en">Missions completed:</span> <strong id="arco-numero">2</strong> <span class="es">de 5</span><span class="en">of 5</span></label>
+            <input type="range" id="arco-misiones" min="0" max="5" value="2">
+            <div class="arco-marcas" aria-hidden="true"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div>
+            <p class="arco-frase" id="arco-frase" role="status">«Hoy mis luces duraron un poco más. Gracias por quedarte.»</p>
+          </div>
+          <p class="nota">
+            <span class="es"><strong class="nota-fuerte">¿Por qué?</strong> Cuidar a alguien motiva más que acumular puntos: los niños se esfuerzan más cuando sienten que alguien depende de ellos. Es una historia secundaria: no bloquea nada ni castiga, solo refleja el avance. <span class="respaldo-inline">Se apoya en: el efecto protegido (Chase y otros, 2009) y la necesidad de vínculo de la teoría de la autodeterminación (Ryan y Deci, 2020).</span></span>
+            <span class="en"><strong class="nota-fuerte">Why?</strong> Caring for someone motivates more than collecting points: children try harder when they feel someone depends on them. It's a side story: it never blocks or punishes, it simply mirrors progress. <span class="respaldo-inline">Grounded in: the protégé effect (Chase et al., 2009) and the need for relatedness in self-determination theory (Ryan &amp; Deci, 2020).</span></span>
+          </p>
+        </section>
+
+        <!-- CAPÍTULO 5 · Por qué funciona -->
+        <section class="paso" data-paso="4" data-animo="3"
+          data-dialogo="¿Sabes? Ya no tengo tanto miedo. Detrás de cada misión hay ideas de cómo aprenden los niños. Toca cada una para verlas."
+          data-dialogo-en="You know what? I'm not so scared anymore. Behind every mission are ideas about how children learn. Tap each one to see them.">
+          <p class="etiqueta"><span class="es">Capítulo 5 · Por qué funciona</span><span class="en">Chapter 5 · Why it works</span></p>
+          <h2><span class="es">Lo que la ciencia dice sobre cómo aprenden los niños</span><span class="en">What science tells us about how children learn</span></h2>
+          <div class="pilares">
+            <div class="pilares-lista" role="tablist" aria-label="Ideas en las que se basa el juego" data-aria-en="Ideas behind the game">
+              <button class="pilar" role="tab" id="t-jugar" aria-controls="p-jugar" aria-selected="true">
+                <span class="pilar-titulo"><span class="es">Aprender jugando</span><span class="en">Learning by playing</span></span>
+                <span class="pilar-disciplina"><span class="es">Pedagogía</span><span class="en">Pedagogy</span></span>
+              </button>
+              <button class="pilar" role="tab" id="t-adapta" aria-controls="p-adapta" aria-selected="false" tabindex="-1">
+                <span class="pilar-titulo"><span class="es">Un juego que se adapta</span><span class="en">A game that adapts</span></span>
+                <span class="pilar-disciplina"><span class="es">Aprendizaje adaptativo</span><span class="en">Adaptive learning</span></span>
+              </button>
+              <button class="pilar" role="tab" id="t-volver" aria-controls="p-volver" aria-selected="false" tabindex="-1">
+                <span class="pilar-titulo"><span class="es">Ganas de volver</span><span class="en">Wanting to come back</span></span>
+                <span class="pilar-disciplina"><span class="es">Gamificación y psicología infantil</span><span class="en">Gamification &amp; child psychology</span></span>
+              </button>
+              <button class="pilar" role="tab" id="t-cerebro" aria-controls="p-cerebro" aria-selected="false" tabindex="-1">
+                <span class="pilar-titulo"><span class="es">Curiosidad y emoción</span><span class="en">Curiosity and emotion</span></span>
+                <span class="pilar-disciplina"><span class="es">Neurociencia</span><span class="en">Neuroscience</span></span>
+              </button>
+              <button class="pilar" role="tab" id="t-medida" aria-controls="p-medida" aria-selected="false" tabindex="-1">
+                <span class="pilar-titulo"><span class="es">Hecho a su medida</span><span class="en">Made to measure</span></span>
+                <span class="pilar-disciplina"><span class="es">Psicología y adaptación</span><span class="en">Psychology &amp; adaptation</span></span>
+              </button>
+            </div>
+
+            <div class="pilar-panel" role="tabpanel" id="p-jugar" aria-labelledby="t-jugar">
+              <h3><span class="es">Aprender jugando</span><span class="en">Learning by playing</span></h3>
+              <p><span class="es">Los niños aprenden más haciendo que escuchando. En un buen juego el conocimiento no se memoriza para un examen: se necesita para avanzar.</span><span class="en">Children learn more by doing than by listening. In a good game, knowledge isn't memorized for a test: it's what you need to move forward.</span></p>
+              <p class="en-juego"><span class="etiqueta-juego"><span class="es">En Equilibria</span><span class="en">In Equilibria</span></span><span class="es">Para que la tripulación respire, el niño tiene que repartir la energía. Para superar una tormenta solar, tiene que entender qué es la radiación. Cada misión es una decisión que toma un planificador real de la NASA, contada a su medida.</span><span class="en">To keep the crew breathing, the child has to budget energy. To survive a solar storm, they have to understand radiation. Every mission is a real decision a NASA planner faces, scaled to a child's world.</span></p>
+              <p class="respaldo"><span class="es">Se apoya en: aprendizaje basado en juegos (Gee, 2003; Plass, Homer y Kinzer, 2015).</span><span class="en">Grounded in: game-based learning (Gee, 2003; Plass, Homer &amp; Kinzer, 2015).</span></p>
+            </div>
+
+            <div class="pilar-panel" role="tabpanel" id="p-adapta" aria-labelledby="t-adapta" hidden>
+              <h3><span class="es">Un juego que se adapta</span><span class="en">A game that adapts</span></h3>
+              <p><span class="es">Un buen profesor nota cuando un estudiante va rápido o se atasca, y cambia su forma de enseñar. En un salón de 40 niños es casi imposible hacerlo con cada uno. Un juego sí puede.</span><span class="en">A great teacher notices when a student races ahead or gets stuck, and changes course. In a classroom of 40, doing that for every child is nearly impossible. A game can.</span></p>
+              <p class="en-juego"><span class="etiqueta-juego"><span class="es">En Equilibria</span><span class="en">In Equilibria</span></span><span class="es">El juego observa las decisiones de cada niño, sin exámenes, y ajusta el camino: más reto si va volando, una pista de LUNIA si se atasca y un repaso si algo no quedó claro. Cada misión empieza sencilla y suma sistemas cuando el niño demuestra que entiende.</span><span class="en">The game reads each child's decisions, with no tests, and reshapes the path: more challenge for those flying ahead, a hint from LUNIA for those who get stuck, a quick review when something didn't click. Each mission starts simple and adds systems as the child shows they understand.</span></p>
+              <p class="respaldo"><span class="es">Se apoya en: aprendizaje adaptativo y evaluación integrada en el juego (Bloom, 1984; Shute y Ventura, 2013; Plass y Pawar, 2020).</span><span class="en">Grounded in: adaptive learning and in-game assessment (Bloom, 1984; Shute &amp; Ventura, 2013; Plass &amp; Pawar, 2020).</span></p>
+            </div>
+
+            <div class="pilar-panel" role="tabpanel" id="p-volver" aria-labelledby="t-volver" hidden>
+              <h3><span class="es">Ganas de volver</span><span class="en">Wanting to come back</span></h3>
+              <p><span class="es">Los niños se motivan de verdad cuando sienten que pueden elegir, que son capaces y que lo que hacen le importa a alguien.</span><span class="en">Children are truly motivated when they feel they can choose, that they are capable, and that what they do matters to someone.</span></p>
+              <p class="en-juego"><span class="etiqueta-juego"><span class="es">En Equilibria</span><span class="en">In Equilibria</span></span><span class="es">Cada niño elige por qué misión empezar y cómo se ve su astronauta. Gana parches de misión que muestran lo que ya domina. Y cuida a LUNIA, que mejora con cada logro. Equivocarse no se castiga: LUNIA explica qué pasó y se intenta de nuevo. No hay rankings: cada uno compite consigo mismo.</span><span class="en">Each child picks which mission to start with and how their astronaut looks. They earn mission patches that show what they've mastered. And they care for LUNIA, who grows with every achievement. Mistakes are never punished: LUNIA explains what happened, and they try again. No leaderboards: each child competes only with themselves.</span></p>
+              <p class="respaldo"><span class="es">Se apoya en: gamificación educativa y teoría de la autodeterminación (Werbach y Hunter, 2012; Ryan y Deci, 2020).</span><span class="en">Grounded in: educational gamification and self-determination theory (Werbach &amp; Hunter, 2012; Ryan &amp; Deci, 2020).</span></p>
+            </div>
+
+            <div class="pilar-panel" role="tabpanel" id="p-cerebro" aria-labelledby="t-cerebro" hidden>
+              <h3><span class="es">Curiosidad y emoción</span><span class="en">Curiosity and emotion</span></h3>
+              <p><span class="es">El cerebro guarda mejor lo que le despierta curiosidad o emoción. Cuando queremos saber algo, se activan los sistemas de recompensa y de memoria, y lo que viene después se recuerda mejor.</span><span class="en">The brain holds on to what sparks curiosity or emotion. When we want to know something, reward and memory systems light up, and what comes next is remembered better.</span></p>
+              <p class="en-juego"><span class="etiqueta-juego"><span class="es">En Equilibria</span><span class="en">In Equilibria</span></span><span class="es">Antes de cada decisión importante, LUNIA pregunta: «¿qué crees que pasará?». Esa pequeña intriga prepara al cerebro para guardar la respuesta. La tensión de una tormenta que se acerca y el alivio de superarla convierten un dato en una experiencia.</span><span class="en">Before every big decision, LUNIA asks: “What do you think will happen?” That small moment of suspense primes the brain to keep the answer. The tension of an approaching storm, and the relief of weathering it, turn a fact into an experience.</span></p>
+              <p class="respaldo"><span class="es">Se apoya en: neurociencia de la curiosidad y la emoción (Gruber y Ranganath, 2019; Immordino-Yang y Damasio, 2007).</span><span class="en">Grounded in: the neuroscience of curiosity and emotion (Gruber &amp; Ranganath, 2019; Immordino-Yang &amp; Damasio, 2007).</span></p>
+            </div>
+
+            <div class="pilar-panel" role="tabpanel" id="p-medida" aria-labelledby="t-medida" hidden>
+              <h3><span class="es">Hecho a su medida</span><span class="en">Made to measure</span></h3>
+              <p><span class="es">Ningún niño juega ni aprende igual: Equilibria arma un camino para cada uno y lo ajusta mientras juega.</span><span class="en">No two children play or learn the same way: Equilibria builds a path for each one and keeps tuning it as they play.</span></p>
+              <ol class="ruta-adaptativa" aria-label="Cómo se adapta el juego" data-aria-en="How the game adapts">
+                <li><strong><span class="es">Al empezar</span><span class="en">At the start</span></strong><span><span class="es">Un test corto con dibujos sugiere avatar, colores y rol en la tripulación.</span><span class="en">A short picture-based quiz suggests an avatar, colors and a crew role.</span></span></li>
+                <li><strong><span class="es">Mientras juega</span><span class="en">While playing</span></strong><span><span class="es">El juego observa cómo decide en cada misión: si acierta, si duda, si vuelve a intentar.</span><span class="en">The game watches how they decide in each mission: whether they get it right, hesitate, or try again.</span></span></li>
+                <li><strong><span class="es">Después</span><span class="en">Next</span></strong><span><span class="es">Ajusta la dificultad, las pistas y el ritmo de la siguiente misión y de su nivel de progreso.</span><span class="en">It tunes the difficulty, hints and pace of the next mission and of their progress level.</span></span></li>
+              </ol>
+              <p class="en-juego"><span class="etiqueta-juego"><span class="es">En Equilibria</span><span class="en">In Equilibria</span></span><span class="es">Dos niños pueden jugar la misma misión y vivir caminos distintos: uno recibe retos más difíciles; el otro, más apoyo de LUNIA hasta lograrlo.</span><span class="en">Two children can play the same mission and live different journeys: one gets tougher challenges; the other, more support from LUNIA until they succeed.</span></p>
+              <p class="respaldo"><span class="es">Se apoya en: Plass y Pawar, 2020; Tondello y otros, 2019; Xiao y otros, 2024.</span><span class="en">Grounded in: Plass &amp; Pawar, 2020; Tondello et al., 2019; Xiao et al., 2024.</span></p>
+            </div>
+          </div>
+        </section>
+
+        <!-- CAPÍTULO 6 · Validez científica -->
+        <section class="paso" data-paso="5" data-animo="4"
+          data-dialogo="¡Mis sensores están más fuertes que nunca! Nada de lo que pasa en mi base es inventado: cada tormenta y cada cifra viene de datos reales de la NASA."
+          data-dialogo-en="My sensors have never been stronger! Nothing in my base is made up: every storm and every number comes from real NASA data.">
+          <p class="etiqueta"><span class="es">Capítulo 6 · Ciencia de verdad</span><span class="en">Chapter 6 · Real science</span></p>
+          <h2><span class="es">Lo que pasa en el juego, pasa en el espacio</span><span class="en">What happens in the game happens in space</span></h2>
+          <ul class="datos">
+            <li><strong>DONKI</strong><span><span class="es">Tormentas solares reales registradas por la NASA. Con ellas se arman las alertas de la misión Blindaje.</span><span class="en">Real solar storms recorded by NASA. They power the alerts in the Shielding mission.</span></span></li>
+            <li><strong>OSDR</strong><span><span class="es">Estudios de la NASA sobre la salud de los astronautas y las plantas que crecen en el espacio. Alimentan las misiones Soporte vital y Alimentos.</span><span class="en">NASA research on astronaut health and plants grown in space. It feeds the Life support and Food missions.</span></span></li>
+            <li><strong>Artemis</strong><span><span class="es">Cómo son la luz, el día y la noche en el polo sur de la Luna, donde la NASA planea volver. Así se arma la misión Energía.</span><span class="en">Light, day and night at the Moon's south pole, where NASA plans to return. They shape the Energy mission.</span></span></li>
+          </ul>
+          <p class="meta-final"><span class="es">Cada dato real aparece con su sello y su fuente, para que niños, docentes y jurados puedan comprobarlo.</span><span class="en">Every real data point carries its seal and its source, so children, teachers and judges can check it for themselves.</span></p>
+        </section>
+
+        <!-- CAPÍTULO 7 · Impacto y cierre -->
+        <section class="paso" data-paso="6" data-animo="5"
+          data-dialogo="¡Ya no estoy sola! Si lo logramos, un niño de Medellín podrá explicar por qué en el espacio cada decisión tiene un costo. ¿Vamos juntos a la misión?"
+          data-dialogo-en="I'm not alone anymore! If we succeed, a child in Medellín will be able to explain why every decision in space has a cost. Shall we start the mission together?">
+          <p class="etiqueta"><span class="es">Capítulo 7 · Lo que queremos lograr</span><span class="en">Chapter 7 · What we want to achieve</span></p>
+          <h2><span class="es">Que cada niño entienda cómo se sobrevive allá arriba</span><span class="en">Every child understanding how we survive up there</span></h2>
+          <ul class="impacto">
+            <li><strong><span class="es">Para quién</span><span class="en">Who it's for</span></strong><span><span class="es">Niñas y niños de 7 a 12 años, sus docentes en clase y sus familias en casa.</span><span class="en">Children ages 7 to 12, their teachers in class and their families at home.</span></span></li>
+            <li><strong><span class="es">Cómo llega</span><span class="en">How it reaches them</span></strong><span><span class="es">Se juega en el navegador, gratis, sin descargas ni cuentas, en computadores y celulares.</span><span class="en">Free, in the browser, with no downloads or accounts, on computers and phones.</span></span></li>
+            <li><strong><span class="es">Por dónde empezamos</span><span class="en">Where we begin</span></strong><span><span class="es">Escuelas de Medellín y de Colombia, en español, con la idea de llevarlo a más idiomas.</span><span class="en">Schools in Medellín and across Colombia, in Spanish first, with more languages to come.</span></span></li>
+          </ul>
+          <p class="meta-final"><span class="es">Nuestra meta: que al terminar, cada niño pueda explicar con sus palabras por qué en el espacio cada decisión tiene un costo.</span><span class="en">Our goal: that by the end, every child can explain in their own words why, in space, every decision has a cost.</span></p>
+          <p class="nota-demo"><span class="es">Este demo incluye el despegue y la misión 1, Soporte vital.</span><span class="en">This demo includes the launch and Mission 1, Life support.</span></p>
+          <a class="btn-entrar" id="entrar" href="#"><span class="es">Entrar al juego</span><span class="en">Enter the game</span></a>
+        </section>
+      </div>
+    </main>
+
+    <footer class="navegacion">
+      <button class="btn btn-fantasma" id="anterior"><span class="es">Atrás</span><span class="en">Back</span></button>
+      <span class="contador" id="contador">Capítulo 1 de 7</span>
+      <button class="btn" id="siguiente"><span class="es">Siguiente</span><span class="en">Next</span></button>
+    </footer>
+  </div>
+
+  <div class="aviso" id="aviso" role="status" hidden></div>
+
+  <script src="sonido.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
